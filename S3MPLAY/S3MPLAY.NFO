@@ -1,0 +1,191 @@
+S3M-player history:
+^^^^^^^^^^^^^^^^^^^
+
+It was written by Andre' Baresel
+
+introduction: oh well, nobody is interrested in, but anyway ;)
+
+Thx go out to: JUR/GA        .... for a lot of Betatesting :)
+                                  (keep on testing ;)
+               Craig Jackson .... for those cool SB infos :)
+                                  (come on let's release it - MANY people wait
+                                   for it)
+               Airon Jayder  .... for your song I found some bugs with
+		(thx for the motivation to produce a MusicDisk !)
+Question:
+~~~~~~~~~
+Should I implement the 'Amiga finetune' command ? - it's really used in S3Ms
+or only in converted MODs ?
+
+version 1.0á :
+~~~~~~~~~~~~~
+   - first version with all effects
+   - only mono 8bit :)
+   - rastertime only for samplerate 35714 Hz
+
+version 1.1á :
+~~~~~~~~~~~~~~
+   - correction with patternloop (thx JUR/GA)
+   - rastertime now for all samplerates (>4000Hz)
+   - load patterns in EMS is implemented, BUT not yet the
+     play routines for that ;) - so switch off EMS usage !
+   - a bug with interrupt killed ? - I forgot to restore it ...
+
+version 1.2á :
+~~~~~~~~~~~~~~
+   - fixed some bugs in EMS routines
+   - play routines for pattern in EMS - "EMS for president" :)
+     (Cost me hours of my live - computer hangs on X times - beat those stupid
+     bugs ! oh well ...)
+   - sorry version 1.1á was 'copro' only (was a wrong setting in BP compiler -
+     I don't need a copro
+   - bug killed in 'special' effects thx JUR/GA
+
+version 1.3á :
+~~~~~~~~~~~~~~
+   - playroutines improved for samples in EMS -> 480KB free mem for DOS shell
+     (more than iplay hehe :)
+   - major "bug" (I forgot about that special case) in note handling killed
+   - Notecut was 1 tick to short - fixed thx JUR
+   - now calc every screen the same amount of data for playing
+   - bug fixed in load routine (was only with EMS usage)
+   - stereo play added
+   - some extra keys added in PLAYS3M.EXE
+   - small bug with to high volumes deleted
+   - another bug in 'read notes' killed (why the hell musician use not defined
+     instruments ?)
+
+version 1.4á :
+~~~~~~~~~~~~~~
+   - optimized innerloop in FILLDMA (16 to 8bit converter, but later also 
+     16to16 - that's only a question of time :)
+   - retrigg corrected (volup & voldown was not correct - sorry for this :)
+   - another bug killed in 'readinstrument' deleted (sorry for that what I did
+     there before ;)
+   - a really horrible bug killed in 'setsamplerate' - thx to JURs SB PRO
+     which ofcoz can play only 22Khz stereo (at 45KHz with my SB I couldn't 
+     hear that :)
+     -> after this I got no more computer hang ons !
+   - Flag added to switch on/off 'toslow' test. this test had caused in
+     former versions some note skips on JURs PC (I can imagin, but I don't
+     believe in <- if it's true it would be horrible!).
+   - improved plays3m a bit (some new info screens)
+   - wrote a new small version of player - more memory for DOSshell, but less
+     userfriendly :(
+   - a bug in DMApage override test killed
+   - a small bug in volslidedown killed (was volsldwn E1)
+
+Speed results on a 486/DX33VLB:
+maxtest.s3m (16 channels full time used) 
+                         about 55% rastertime for 45kHz stereo
+			 about 45% rastertime for 45kHz mono
+			 about 33% rastertime for 22kHz stereo
+			 about 28% rastertime for 22kHz mono
+			 about 24% rastertime for 16kHz stereo
+			 about 18% rastertime for 16kHz mono
+                         about 15% rastertime for 10kHz mono
+--> really shame on me for these results ! Oh well I have to optimize, ...,
+optimize, optimize
+
+version 1.5á :
+~~~~~~~~~~~~~~
+   - some changes in "toslow?" test ... (hmm does it work on JURs PC ?)
+   - killed another bug (oh well sometimes I have to clean up my room ;)
+     in read instrument
+   - killed another bug in special case NO INSTRUMENT GIVEN - thx to Airon 
+     Jayder for his song WEDDING.S3M where I found it :)
+   - bug in calc posttable deleted (was bugy with some special volumes)
+   - bug fixed in retrigg (was one tick to late every retrigg :( )
+   - a stupid bug in vibrato and tremolo deleted - I used 128 byte tables -
+     sorry for this ! was a wrong interpretation what I got from some of my
+     examples :( ... now vibrato sounds really (!!!) like original thing in ST3
+   - fine vibrato added (was new in ST3.2)
+   - glissando controll not yet, but in next version ...
+
+version 1.6á :
+~~~~~~~~~~~~~~
+   - bug fixed in 'set global volume' - now check for to high values ...
+   - error check removed. I checked for 1Ah at the end of songname, but ST3.00
+     (yeah a not released version) wrote 0 there. That check was not that 
+     important so I removed it.
+   - oscillator example added. It's simple and slow, but you will understand 
+     what I did and that's important, if you want to see a fast oscillator look
+     at our musicdisk - coming out ... soon ? I dounno, that depends on how
+     many effects we want to put into it.
+   - did a lot of optimizing (one 'add' deleted from inner loop + 31 out of 32
+     'dec','jnz' deleted ... I unrolled innerloop 32 times)
+   - fixed I SB PRO problem ... now I switch off SB PRO filter automaticly 
+     (that filter is really shit !).
+
+version 1.7á :
+~~~~~~~~~~~~~~
+   - low quality mode added (44kHz lowqual = 22kHz Hiqual+every byte twice)
+     (44kHz lowqual sounds better than 22kHz lowqual - soundblaster hardware
+     sucks at lower frequencies!)
+   - EMS access optimized (now I switch for every EMS sample max 2 pages on !)
+   - removed a 'bug' in calc_frequency was buggy for C2speeds<3500Hz
+
+Some ideas I thought about, but I haven't yet the time to add it:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1... maybe include panning for SB stereo ? (of course a lost of speed !)
+     I dounno yet, maybe a special option like stereo & 16bit play,
+     but speed lost from mono2stereo is not that high like stereo2panstereo
+     (remember: add every channel to both sides ... 2 times more memory access!)
+2... idea "main panning": put all left channels abit to right side and all right
+     channels abit to the left ... it's better for ear phones ... no real use
+     on a big stereo :) ... that kind of panning would take not that much time
+     like panning for each channel seperate.
+
+Coding idea for 1. :
+~~~~~~~~~~~~~~~~~~~~
+another table for panning:  locpan: array[0..255,0..255] of byte;
+
+  precalc it in this way: locpan[i,j]:=(i*j) shr 8 
+
+  for opposite side do that later: 
+        locpan[255-i,j]:=(255-i)*j shr 8 = j - i*j shr 8
+
+  bh = vol
+
+  xor      eax,eax
+  mov      ah,channelpan
+lll:
+
+     mov      al,samples[position]                         ; fs:[di]
+     ; .... next position in sample ...
+     add      edi,edx
+     adc      di,0
+     ; .... panning :
+(*)  mov      bl, locpan [channelpan,al] = locpan[eax]     ; gs:[eax]
+     mov      bp, volumetab[vol,bl] = volumetab[ebx+ebx]   ; ds:[ebx+ebx]
+
+     add      [original side],bp                           ; es:[si]
+
+     ;  to slow : mov      bl, locpan [255-channelpan,al] 
+     ;  the better way: (bl = locpan[eax] look above)
+     neg      bl
+     add      bl, al
+(*)  mov      bp, volumetab[vol,bl] = volumetab[ebx+ebx]   ; ds:[ebx+ebx]
+
+(*)  add      [opposite side],bp                           ; es:[si+2] (or -2 ... two innerloops !)
+
+dec  cx , loop to lll if cx>0
+
+3 memory acesses more than innerloop without panning !
+all registers used ...
+
+Coding idea for 2.:
+~~~~~~~~~~~~~~~~~~~
+implement it in filldma loop:
+
+rightpan,
+oppositpan : array [0..4095] of byte;
+
+take calculations I used for post8bit/post16bit but now add panning :
+rightpan[i]:=panvalue*post8bit[i] shr 8
+oppositepan[i]:=(255-panvlue)*post8bit[i] shr 8
+               = post8bit[i]-rightpan[i]
+
+... well for optimization put these two tables in one, add the results of both
+sides and write it. -> one 'add' more, and a 3 word accesses instead 
+of 2byte,1word acesses.

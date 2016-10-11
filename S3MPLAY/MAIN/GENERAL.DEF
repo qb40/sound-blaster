@@ -1,0 +1,76 @@
+TCHANNEL STRUC
+           ; general switches :
+           enabled     DB     ?   ; flag if =0 then nothing to mix at the moment
+           channeltyp  DB     ?   ; 0=off,1=left,2=right,3,4=adlib ... if 0,3,4 -> everything ignored !
+           ; current Instrument :
+           InstrSEG    DW     ?   ; DOS segment of current instrument data
+           SampleSEG   DW     ?   ; DOS segment of current sample data
+           InstrNo     DB     ?   ; number of instrument is currently playing
+           Note        DB     ?   ; we don't need it really for playing, but let's store it anyway
+           ; copy of sampledata (maybe it differs a bit):
+           SampleVol   DB     ?   ; current sample volume
+           sLoopflag   DB     ?   ; flag if we have to loop sample
+           sSmpstart   DW     ?   ; start offset of sample
+           sLoopstart  DW     ?   ; loop start of current sample =0ffffh if no loop
+           sLoopend    DW     ?   ; loop end/normal end of current sample
+           sCurPos     DD     ?   ; fixed point value for current position in sample
+           sStep       DD     ?   ; fixed point value of frequency step (distance of one step
+                                  ; depends on period we play currently)
+           sPeriod     DW     ?   ; st3 period ... you know these amiga values (look at tech.doc of ST3)
+                                  ; period does no influence playing a sample direct, but it's for sliding etc.
+           lower_border DW    ?   ; B-7 or B-5 period for current instrument to check limits
+           upper_border DW    ?   ; C-0 or C-3 period for current instrument to check limits
+           ; effect info :
+           command     DW     ?   ; 2 times effectnumber (for using a jmptable)
+           cmd2nd      DW     ?   ; -> 2nd command part - for multiple effects
+           parameter   DB     ?   ; just the command parameters
+           ; extra effect data :
+           continueEf  DB     ?   ; Flag if we should continue effect - vibrato,tremolo
+           VibtabOfs   DW     ?   ; yo for each channel its own choise (default = OFS sinuswave)
+           TrmtabOfs   DW     ?   ; = Offset of wavetable for tremolo
+           tablepos    DB     ?   ; <- we reset this if a effect starts uses such a table
+           VibPara     DB     ?   ; <- for dual command Vib + Vol
+           PortPara    DB     ?   ; <- for dual command Port + Vol
+           OldPeriod   DW     ?   ; save that value for some effects
+           Oldvolume   DB     ?   ; save that value for tremolo
+           WantedPeri  DW     ?   ; <- period to slide to with Portamento
+           ArpegPos    DB     ?   ; which of thoses 3 notes we currently play ...
+           note1       DB     ?   ; \
+           note2       DB     ?   ; - +note - 3 notes we do arpeggio between
+           Step0       DD     ?   ; \
+           Step1       DD     ?   ;  |- the 3 step values we switch between in arpeggio effect (0 is start value <- we have to refesh after arpeggio)
+           Step2       DD     ?   ; /
+           cTick       DB     ?   ; - ticks left to retrigg note
+           savNote     DB     ?   ; \
+           savInst     DB     ?   ;  | - new values for notedelay ...
+           SavVol      DB     ?   ;  |
+           ndTick      DB     ?   ; /   <- also used for Notecut (ticks left to cut)
+TCHANNEL ENDS
+
+TINSTRUMENT STRUC
+              TYP  DB  ?     ; if <>1 forget the rest it's a wrong instrument typ
+              ; only read the following things if typ was =1
+              ; or you will get 'amazing' results ;)
+              DOSname DB 12 DUP (?)
+              notused1      DB  ?
+              memseg        DW  ?   ; segment of sampledata
+              slength       DW  ?   ; length of sample <= 64KB
+              HI_length     DW  ?   ; <- not used !
+              loopbeg       DW  ?   ; loop begin <= 64KB
+              HI_loopbeg    DW  ?   ; <- not used !
+              loopend       DW  ?   ; loop end <= 64KB
+              HI_loopend    DW  ?   ; <- not used !
+              vol           DB  ?   ; default instrument volume
+              notused2      DB  ?
+              packinfo      DB  ?   ; =0 or we can't play it !
+              flags         DB  ?   ; bit 0 = sample loops
+                                    ; all other bits not supported ...
+              c2speed       DW  ?   ; frequency at middle C (actually C-4)
+              HI_c2speed    DW  ?   ; <- not used !
+              notused3      DB 4 DUP (?)
+              GUS_addr      DW  ?   ; <- not used !
+              SB_Flags      DW  ?   ; dounno ... not used yet
+              SB_last       DD  ?   ; not used yet (will be good for EMS play ?)
+              IName         DB 28 DUP (?)
+              SCRS_ID       DB  4 DUP (?)
+TINSTRUMENT ENDS
